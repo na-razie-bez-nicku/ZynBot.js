@@ -1,16 +1,16 @@
 {
   "name": "zynbot",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsup src/index.ts --format cjs,esm --dts && npx fix-tsup-cjs",
+    "build": "tsup index.ts --format cjs,esm --dts && npx fix-tsup-cjs",
     "lint": "tsc",
     "test": "jest"
   },

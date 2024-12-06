@@ -1,5 +1,5 @@
 import { User } from "./Client";
-import { Message } from "./MessagingTypes";
+import { Message } from "./Messaging";
 
 export type ActionType = "ready" | "messageSent";
 
