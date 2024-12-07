@@ -64,6 +64,7 @@ export class Client {
             author: { id: from.from } as User,
             channel: { id: from.channel } as Channel,
             text: from.message,
+            date: from.date,
           } as Message);
         }
       );

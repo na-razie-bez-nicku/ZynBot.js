@@ -6,4 +6,5 @@ export interface Message {
   text: string;
   guild: Guild;
   channel: Channel;
+  date: Date
 }
