@@ -3,7 +3,7 @@ import { Channel, Guild } from "./Guilds";
 
 export interface Message {
   author: User;
-  message: string;
+  text: string;
   guild: Guild;
   channel: Channel;
 }
