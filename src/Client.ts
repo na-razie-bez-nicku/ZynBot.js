@@ -7,6 +7,8 @@ import { Channel } from "./types/Guilds";
 export class Client {
   private token: string;
   private id: number;
+  private autoAcceptFriendRequest: boolean = true;
+
   private user_info: any;
   private socket: Socket = io("https://zyntra.xyz", { autoConnect: true });
 
@@ -17,9 +19,14 @@ export class Client {
     (object: Action) => void
   >();
 
-  constructor(token: string, id: number) {
+  constructor(
+    token: string,
+    id: number,
+    autoAcceptFriendRequest: boolean = true
+  ) {
     this.token = token;
     this.id = id;
+    this.autoAcceptFriendRequest = autoAcceptFriendRequest;
   }
 
   public on(action: ActionType, callback: (object: Action) => void) {
@@ -68,6 +75,64 @@ export class Client {
           } as Message);
         }
       );
+
+    if (this.autoAcceptFriendRequest) {
+      const response = await fetch(
+        "https://zyntra.xyz/auth/getFriendRequests",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ auth: this.user_info.auth, id: this.id }),
+        }
+      );
+
+      (await response.json()).forEach(async (user: any) => {
+        console.log(user);
+        await fetch("https://zyntra.xyz/auth/acceptFriendRequest", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            auth: this.user_info.auth,
+            id: this.id,
+            friendId: user.id,
+          }),
+        });
+      });
+
+      this.socket.on("friendRequestUpdate", async (data) => {
+        const { state } = data;
+        if (state != 0) return;
+        const response = await fetch(
+          "https://zyntra.xyz/auth/getFriendRequests",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ auth: this.user_info.auth, id: this.id }),
+          }
+        );
+
+        (await response.json()).forEach(async (user: any) => {
+          console.log(user);
+          await fetch("https://zyntra.xyz/auth/acceptFriendRequest", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              auth: this.user_info.auth,
+              id: this.id,
+              friendId: user.id,
+            }),
+          });
+        });
+      });
+    }
 
     if (this.events.has("ready"))
       this.events.get("ready")!({ user } as ReadyAction);

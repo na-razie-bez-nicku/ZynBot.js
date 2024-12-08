@@ -1,7 +1,7 @@
 import { User } from "./Client";
 import { Message } from "./Messaging";
 
-export type ActionType = "ready" | "messageSent";
+export type ActionType = "ready" | "messageSent";// | "friendRequest";
 
 export interface Action {}
 
@@ -13,3 +13,7 @@ export interface MessageSentAction extends Action {
   user: User;
   message: Message;
 }
+
+// export interface FriendRequestAction extends Action {
+//   user: User;
+// }
