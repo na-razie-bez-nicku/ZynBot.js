@@ -66,12 +66,25 @@ export class Client {
     if (this.events.has("messageSent"))
       this.socket.on(
         "messageReceived",
-        (from: any, channel: number, message: string, date: Date) => {
+        async (from: any) => {
+          const response = await fetch(
+            "https://zyntra.xyz/auth/getUserData?id=" + from.from,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // body: JSON.stringify({ id:  }),
+            }
+          );
+          const username = (await response.json()).username;
           this.events.get("messageSent")!({
-            author: { id: from.from } as User,
+            author: { id: from.from, username } as User,
             channel: { id: from.channel } as Channel,
             text: from.message,
             date: from.date,
+            id: from.messageId,
+            reply: from.reply
           } as Message);
         }
       );
@@ -144,6 +157,16 @@ export class Client {
       auth: this.user_info.auth,
       message,
       accessPoint: channel_id,
+    });
+  }
+
+  public async reply(channel_id: number, message: string, reply: number) {
+    await this.socket.emit("sendToAccessPoint", {
+      uid: this.id,
+      auth: this.user_info.auth,
+      message,
+      accessPoint: channel_id,
+      reply,
     });
   }
 }
