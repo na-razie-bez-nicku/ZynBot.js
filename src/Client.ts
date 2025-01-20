@@ -49,10 +49,12 @@ export class Client {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ session_secret: this.token, id: this.id }),
+      body: JSON.stringify({ sessionSecret: this.token, id: this.id }),
     });
 
     this.user_info = await response.json();
+
+    console.log(this.user_info);
 
     const user: User = {
       username: this.user_info.username,
@@ -64,30 +66,27 @@ export class Client {
       auth: this.user_info.auth,
     });
     if (this.events.has("messageSent"))
-      this.socket.on(
-        "messageReceived",
-        async (from: any) => {
-          const response = await fetch(
-            "https://zyntra.xyz/auth/getUserData?id=" + from.from,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              // body: JSON.stringify({ id:  }),
-            }
-          );
-          const username = (await response.json()).username;
-          this.events.get("messageSent")!({
-            author: { id: from.from, username } as User,
-            channel: { id: from.channel } as Channel,
-            text: from.message,
-            date: from.date,
-            id: from.messageId,
-            reply: from.reply
-          } as Message);
-        }
-      );
+      this.socket.on("messageReceived", async (from: any) => {
+        const response = await fetch(
+          "https://zyntra.xyz/auth/getUserData?id=" + from.from,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({ id:  }),
+          }
+        );
+        const username = (await response.json()).username;
+        this.events.get("messageSent")!({
+          author: { id: from.from, username } as User,
+          channel: { id: from.channel } as Channel,
+          text: from.message,
+          date: from.date,
+          id: from.messageId,
+          reply: from.reply,
+        } as Message);
+      });
 
     if (this.autoAcceptFriendRequest) {
       const response = await fetch(
