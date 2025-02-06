@@ -1,7 +1,7 @@
 {
-  "name": "zynbot",
-  "version": "1.1.0",
-  "description": "",
+  "name": "zynbot.js",
+  "version": "1.1.5",
+  "description": "Framework for creating self-bots for Zyntra (https://zyntra.xyz) using JavaScript.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -15,7 +15,7 @@
     "test": "jest"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.5",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
