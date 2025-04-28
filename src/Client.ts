@@ -44,7 +44,7 @@ export class Client {
   // }
 
   public async login() {
-    const response = await fetch("https://zyntra.xyz/auth/token", {
+    const response = await fetch("https://zyntra.xyz/api/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -53,8 +53,6 @@ export class Client {
     });
 
     this.user_info = await response.json();
-
-    console.log(this.user_info);
 
     const user: User = {
       username: this.user_info.username,
@@ -68,7 +66,7 @@ export class Client {
     if (this.events.has("messageSent"))
       this.socket.on("messageReceived", async (from: any) => {
         const response = await fetch(
-          "https://zyntra.xyz/auth/getUserData?id=" + from.from,
+          "https://zyntra.xyz/api/getUserData?id=" + from.from,
           {
             method: "GET",
             headers: {
@@ -81,7 +79,7 @@ export class Client {
         this.events.get("messageSent")!({
           author: { id: from.from, username } as User,
           channel: { id: from.channel } as Channel,
-          text: from.message,
+          content: from.message,
           date: from.date,
           id: from.messageId,
           reply: from.reply,
@@ -90,7 +88,7 @@ export class Client {
 
     if (this.autoAcceptFriendRequest) {
       const response = await fetch(
-        "https://zyntra.xyz/auth/getFriendRequests",
+        "https://zyntra.xyz/api/getFriendRequests",
         {
           method: "POST",
           headers: {
@@ -102,7 +100,7 @@ export class Client {
 
       (await response.json()).forEach(async (user: any) => {
         console.log(user);
-        await fetch("https://zyntra.xyz/auth/acceptFriendRequest", {
+        await fetch("https://zyntra.xyz/api/acceptFriendRequest", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -119,7 +117,7 @@ export class Client {
         const { state } = data;
         if (state != 0) return;
         const response = await fetch(
-          "https://zyntra.xyz/auth/getFriendRequests",
+          "https://zyntra.xyz/api/getFriendRequests",
           {
             method: "POST",
             headers: {
@@ -131,7 +129,7 @@ export class Client {
 
         (await response.json()).forEach(async (user: any) => {
           console.log(user);
-          await fetch("https://zyntra.xyz/auth/acceptFriendRequest", {
+          await fetch("https://zyntra.xyz/api/acceptFriendRequest", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

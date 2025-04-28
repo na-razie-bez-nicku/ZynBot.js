@@ -8,6 +8,10 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "zyntra",
+    "bots"
+  ],
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsup index.ts --format cjs,esm --dts && npx fix-tsup-cjs",
